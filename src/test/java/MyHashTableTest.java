@@ -18,6 +18,17 @@ public class MyHashTableTest {
         testTable.remove(123);
         assertNull(testTable.search(123));
 
+        testTable.add(123, "jouy123");
+        testTable.add(12, "jouy12");
+        testTable.add(1, "jouy1");
+
+        testTable.setHash(x -> Math.abs(x.hashCode() + 35) % testTable.getBucketCount() );
+
+        assertEquals("jouy123", testTable.search(123));
+        assertEquals("jouy12", testTable.search(12));
+        assertEquals("jouy1", testTable.search(1));
+
+
     }
 
 }

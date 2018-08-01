@@ -17,13 +17,13 @@ public class MyHashTable<K, V> {
     public MyHashTable(int capacity) {
         this.capacity = capacity;
         table = new ArrayList[capacity];
-        initTable();
+        initTable(table);
     }
 
     public MyHashTable() {
         this.capacity = 16;
         table = new ArrayList[capacity];
-        initTable();
+        initTable(table);
     }
 
     public MyHashTable(int capacity, Function<K, Integer> hash) {
@@ -86,13 +86,26 @@ public class MyHashTable<K, V> {
         if (getLoadFactor() > 0.75) {
             capacity *= 2;
             table = Arrays.copyOf(table, capacity);
-            initTable();
+            initTable(table);
         }
     }
 
-    private void initTable() {
+    public void setHash(Function<K, Integer> hash) {
+        this.hash = hash;
+        List<Pair>[] newTable = new ArrayList[capacity];
+        initTable(newTable);
         for (int i = 0; i < capacity; i++) {
-            if (table[i] == null) table[i] = new ArrayList<>();
+            for (Pair pair :  table[i]) {
+                newTable[hash.apply((K)pair.getKey())].add(pair);
+            }
+        }
+        table = newTable;
+
+    }
+
+    private void initTable(List<Pair>[] tbl) {
+        for (int i = 0; i < capacity; i++) {
+            if (tbl[i] == null) tbl[i] = new ArrayList<>();
         }
     }
 
